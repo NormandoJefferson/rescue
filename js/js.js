@@ -10,6 +10,7 @@ function start() {
 
 	
 	//Principais variáveis do jogo:
+	
 	var jogo = {}
 	var TECLA = {
 		// Valor decimal de cada tecla.
@@ -19,6 +20,7 @@ function start() {
 	}
 
 	var velocidade=5;
+	
 	// Cria uma posição aleatória para o helicóptero inimigo.
 	var posicaoY = parseInt(Math.random() * 334);
 	
@@ -41,6 +43,8 @@ function start() {
 		movefundo();
 		movejogador();
 		moveinimigo1();
+		moveinimigo2();
+		moveamigo();
 	} 
 
 	//Função que movimenta o fundo do jogo.
@@ -96,6 +100,25 @@ function start() {
 			posicaoY = parseInt(Math.random() * 334);
 			$("#inimigo1").css("left",694);
 			$("#inimigo1").css("top",posicaoY);	
+		}
+	}
+
+	function moveinimigo2() {
+    	posicaoX = parseInt($("#inimigo2").css("left"));
+		$("#inimigo2").css("left",posicaoX-3);
+		
+		// Reposiciona o inimigo2 do lado direito da div.
+		if (posicaoX<=0) {
+			$("#inimigo2").css("left",775);			
+		}
+	}
+
+	function moveamigo() {
+		posicaoX = parseInt($("#amigo").css("left"));
+		$("#amigo").css("left",posicaoX+1);
+					
+		if (posicaoX>906) {
+			$("#amigo").css("left",0);		
 		}
 	}
 } 
