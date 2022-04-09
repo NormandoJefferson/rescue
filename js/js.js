@@ -17,6 +17,10 @@ function start() {
 		S: 83,
 		D: 68
 	}
+
+	var velocidade=5;
+	// Cria uma posição aleatória para o helicóptero inimigo.
+	var posicaoY = parseInt(Math.random() * 334);
 	
 	jogo.pressionou = [];
 
@@ -36,6 +40,7 @@ function start() {
 	function loop() {
 		movefundo();
 		movejogador();
+		moveinimigo1();
 	} 
 
 	//Função que movimenta o fundo do jogo.
@@ -74,4 +79,23 @@ function start() {
 			//Chama função Disparo	
 		}
 	} 	
+
+	function moveinimigo1() {
+		//Posição da div inimigo1.
+		posicaoX = parseInt($("#inimigo1").css("left"));
+		// Atualiza a posição left da div inimigo1 que vai
+		// receber a posiçãox - velocidade (variável que vale 5).
+		$("#inimigo1").css("left",posicaoX-velocidade);
+		// A posiçãoy é um valor randômico, por isso
+		// o helicóptero vai aparecer em locais diferêntes.
+		$("#inimigo1").css("top",posicaoY);
+		
+		// Quando o helicóptero chega na esquerda ele reaparece
+		// do lado direito. 
+		if (posicaoX<=0) {
+			posicaoY = parseInt(Math.random() * 334);
+			$("#inimigo1").css("left",694);
+			$("#inimigo1").css("top",posicaoY);	
+		}
+	}
 } 
