@@ -11,6 +11,7 @@ function start() {
 	
 	//Principais variáveis do jogo:
 	
+	var podeAtirar=true;
 	var jogo = {}
 	var TECLA = {
 		// Valor decimal de cada tecla.
@@ -79,8 +80,8 @@ function start() {
 		}
 		
 		if (jogo.pressionou[TECLA.D]) {
-			
-			//Chama função Disparo	
+			//Chama função Disparo.
+			disparo();	
 		}
 	} 	
 
@@ -121,4 +122,43 @@ function start() {
 			$("#amigo").css("left",0);		
 		}
 	}
+
+	function disparo() {
+		if (podeAtirar==true) {	
+		// Para que não possa realizar um novo tiro enquanto
+		// essa função estiver em execução.
+		podeAtirar=false;
+		topo = parseInt($("#jogador").css("top"))
+		posicaoX= parseInt($("#jogador").css("left"))
+	
+		// Soma esses valores à posição do helicóptero para o tiro 
+		// não sair de dentro do helicóptero.
+		tiroX = posicaoX + 190;
+		topoTiro=topo+37;
+		$("#fundoGame").append("<div id='disparo'></div");
+		$("#disparo").css("top",topoTiro);
+		$("#disparo").css("left",tiroX);
+		var tempoDisparo=window.setInterval(executaDisparo, 30);
+		
+		}
+	 
+		function executaDisparo() {
+			posicaoX = parseInt($("#disparo").css("left"));
+			$("#disparo").css("left",posicaoX+15); 
+			
+			// Se o disparo chegar no final da tela:
+			if (posicaoX>900) {	
+				
+				// Remove a variável de tempo.
+				window.clearInterval(tempoDisparo);
+				// Zera o disparo.
+				tempoDisparo=null;
+				// Remove o disparo da tela.
+				$("#disparo").remove();
+				// O usuário pode atirar novamente.
+				podeAtirar=true;	
+			}
+		} 
+	} 	
 } 
+
