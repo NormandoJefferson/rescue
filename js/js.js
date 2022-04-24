@@ -26,13 +26,22 @@ function start() {
 		S: 83,
 		D: 68
 	}
-
 	var velocidade=5;
-	
 	// Cria uma posição aleatória para o helicóptero inimigo.
 	var posicaoY = parseInt(Math.random() * 334);
-	
 	jogo.pressionou = [];
+
+	// Variáveis de som.
+	var somDisparo=document.getElementById("somDisparo");
+	var somExplosao=document.getElementById("somExplosao");
+	var musica=document.getElementById("musica");
+	var somGameover=document.getElementById("somGameover");
+	var somPerdido=document.getElementById("somPerdido");
+	var somResgate=document.getElementById("somResgate");
+
+	//Música em loop
+	musica.addEventListener("ended", function(){ musica.currentTime = 0; musica.play(); }, false);
+	musica.play();
 
 	//Verifica se o usuário pressionou alguma tecla.	
 	$(document).keydown(function(e){
@@ -135,21 +144,21 @@ function start() {
 
 	function disparo() {
 		if (podeAtirar==true) {	
-		// Para que não possa realizar um novo tiro enquanto
-		// essa função estiver em execução.
-		podeAtirar=false;
-		topo = parseInt($("#jogador").css("top"))
-		posicaoX= parseInt($("#jogador").css("left"))
-	
-		// Soma esses valores à posição do helicóptero para o tiro 
-		// não sair de dentro do helicóptero.
-		tiroX = posicaoX + 190;
-		topoTiro=topo+37;
-		$("#fundoGame").append("<div id='disparo'></div");
-		$("#disparo").css("top",topoTiro);
-		$("#disparo").css("left",tiroX);
-		var tempoDisparo=window.setInterval(executaDisparo, 30);
+			somDisparo.play();
+			// Para que não possa realizar um novo tiro enquanto
+			// essa função estiver em execução.
+			podeAtirar=false;
+			topo = parseInt($("#jogador").css("top"))
+			posicaoX= parseInt($("#jogador").css("left"))
 		
+			// Soma esses valores à posição do helicóptero para o tiro 
+			// não sair de dentro do helicóptero.
+			tiroX = posicaoX + 190;
+			topoTiro=topo+37;
+			$("#fundoGame").append("<div id='disparo'></div");
+			$("#disparo").css("top",topoTiro);
+			$("#disparo").css("left",tiroX);
+			var tempoDisparo=window.setInterval(executaDisparo, 30);	
 		}
 	 
 		function executaDisparo() {
@@ -240,6 +249,7 @@ function start() {
 
 		// jogador com o amigo.
 		if (colisao5.length>0) {
+			somResgate.play();
 			salvos++;
 			reposicionaAmigo();
 
@@ -260,6 +270,7 @@ function start() {
 
 	//Explosão 1.
 	function explosao1(inimigo1X,inimigo1Y) {
+		somExplosao.play();
 		$("#fundoGame").append("<div id='explosao1'></div");
 		$("#explosao1").css("background-image", "url(imgs/explosao.png)");
 		var div=$("#explosao1");
@@ -281,6 +292,7 @@ function start() {
 
 	//Explosão 2.
 	function explosao2(inimigo2X,inimigo2Y) {
+		somExplosao.play();
 		$("#fundoGame").append("<div id='explosao2'></div");
 		$("#explosao2").css("background-image", "url(imgs/explosao.png)");
 		var div2=$("#explosao2");
@@ -299,6 +311,7 @@ function start() {
 	
 	//Explosão3.
 	function explosao3(amigoX,amigoY) {
+		somPerdido.play();
 		$("#fundoGame").append("<div id='explosao3' class='anima4'></div");
 		$("#explosao3").css("top",amigoY);
 		$("#explosao3").css("left",amigoX);
@@ -358,6 +371,23 @@ function start() {
 		if (energiaAtual==0) {
 			$("#energia").css("background-image", "url(imgs/energia0.png)");
 			//Game Over
+			gameOver();
 		}
 	} 
+
+	function gameOver() {
+		fimdejogo=true;
+		musica.pause();
+		somGameover.play();
+		
+		window.clearInterval(jogo.timer);
+		jogo.timer=null;
+		
+		$("#jogador").remove();
+		$("#inimigo1").remove();
+		$("#inimigo2").remove();
+		$("#amigo").remove();
+		$("#fundoGame").append("<div id='fim'></div>");
+		$("#fim").html("<h1> Game Over </h1><p>Sua pontuação foi: " + pontos + "</p>" + "<div id='reinicia' onClick=reiniciaJogo()><h3>Jogar Novamente</h3></div>");
+	}
 } 
